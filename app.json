@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ToDoApp",
-    "slug": "ToDoApp",
+    "name": "todoapp",
+    "slug": "todoapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,13 +13,15 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rami0617.todoapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.rami0617.todoapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
