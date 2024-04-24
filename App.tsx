@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,23 +10,31 @@ import {
 import CheckBox from "@react-native-community/checkbox";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+type TTodos = {
+  id: number;
+  value: string;
+  isSelected: boolean;
+  isEdit: boolean;
+};
+
 export default function App() {
-  const [todos, setTodos] = useState([
+  const [todos, setTodos] = useState<TTodos[]>([
     { id: 0, value: "study english", isSelected: false, isEdit: false },
   ]);
-  const [todo, setTodo] = useState("");
-  const [editedTodo, setEditedTodo] = useState("");
-  const [toggleAllCheckBox, setToggleAllCheckBox] = useState(false);
+  const [todo, setTodo] = useState<string>("");
+  const [editedTodo, setEditedTodo] = useState<string>("");
+  const [toggleAllCheckBox, setToggleAllCheckBox] = useState<boolean>(false);
 
   useEffect(() => {
     if (todos.length) {
-      setToggleAllCheckBox(todos.every((item) => item.isSelected === true));
+      setToggleAllCheckBox(
+        todos.every((item: TTodos) => item.isSelected === true)
+      );
     }
   }, [todos]);
 
   return (
     <View style={styles.container}>
-      <StatusBar />
       <View style={styles.title}>
         <Text>MY TODO</Text>
       </View>
@@ -37,8 +44,8 @@ export default function App() {
           value={toggleAllCheckBox}
           onValueChange={(newValue) => {
             setToggleAllCheckBox(newValue);
-            setTodos((prev) =>
-              prev.map((item) => {
+            setTodos((prev: TTodos[]) =>
+              prev.map((item: TTodos) => {
                 return { ...item, isSelected: newValue };
               })
             );
@@ -47,8 +54,8 @@ export default function App() {
         <Text>{toggleAllCheckBox}</Text>
         <TouchableOpacity
           onPress={() => {
-            setTodos((prev) =>
-              prev.filter((item) => item.isSelected === false)
+            setTodos((prev: TTodos[]) =>
+              prev.filter((item: TTodos) => item.isSelected === false)
             );
             setToggleAllCheckBox(false);
           }}
@@ -57,14 +64,14 @@ export default function App() {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.todoContainer}>
-        {todos.map((item, index) => (
+        {todos.map((item: TTodos, index: number) => (
           <View key={item.id} style={styles.todoList}>
             <CheckBox
               disabled={false}
               value={todos[index].isSelected}
-              onValueChange={(newValue) => {
-                setTodos((prev) =>
-                  prev.map((item, prevTodoIndex) => {
+              onValueChange={(newValue: boolean) => {
+                setTodos((prev: TTodos[]) =>
+                  prev.map((item: TTodos, prevTodoIndex: number) => {
                     if (prevTodoIndex === index) {
                       item.isSelected = newValue;
                     }
@@ -76,13 +83,9 @@ export default function App() {
             {!item.isEdit && <Text key={item.id}>{item.value}</Text>}
             {item.isEdit && (
               <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: "gray",
-                  paddingHorizontal: 10,
-                }}
+                style={styles.editedInput}
                 defaultValue={todos[index].value}
-                onChangeText={(newTodo) => {
+                onChangeText={(newTodo: string) => {
                   setEditedTodo(newTodo);
                 }}
               ></TextInput>
@@ -91,8 +94,8 @@ export default function App() {
               <TouchableOpacity
                 style={styles.icon}
                 onPress={() => {
-                  setTodos((prev) =>
-                    prev.map((item, todoIndex) => {
+                  setTodos((prev: TTodos[]) =>
+                    prev.map((item: TTodos, todoIndex: number) => {
                       if (index === todoIndex) {
                         item.isEdit = true;
                       }
@@ -108,8 +111,8 @@ export default function App() {
               <TouchableOpacity
                 style={styles.icon}
                 onPress={() => {
-                  setTodos((prev) =>
-                    prev.map((item, todoIndex) => {
+                  setTodos((prev: TTodos[]) =>
+                    prev.map((item: TTodos, todoIndex: number) => {
                       if (index === todoIndex) {
                         item.isEdit = false;
                         item.value = editedTodo ? editedTodo : item.value;
@@ -129,19 +132,18 @@ export default function App() {
         <TextInput
           placeholder="Enter your todo"
           defaultValue={todo}
-          onChangeText={(newTodo) => {
+          onChangeText={(newTodo: string) => {
             setTodo(newTodo);
           }}
           style={styles.input}
         />
 
         <TouchableOpacity
-          title="ADD"
           onPress={() => {
-            setTodos((preTodo) => [
-              ...preTodo,
+            setTodos((prev: TTodos[]) => [
+              ...prev,
               {
-                id: preTodo.length,
+                id: prev.length,
                 value: todo,
                 isEdit: false,
                 isSelected: false,
@@ -185,9 +187,14 @@ const styles = StyleSheet.create({
   },
   todoList: {
     flexDirection: "row",
-    justifyContent: "start",
+    justifyContent: "flex-start",
     alignItems: "center",
     gap: 5,
+  },
+  editedInput: {
+    borderWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: 10,
   },
   bottomContainer: {
     flexDirection: "row",
